@@ -4,7 +4,7 @@ platforms: dotnet
 author: cephalin
 ---
 
-# MEAN.js sample for Azure App Service
+# .NET Core MVC sample for Azure App Service
 
 This is a sample application that you can use to follow along with the tutorial at 
 [Build a .NET Core and SQL Database web app in Azure Web Apps for Containers](https://docs.microsoft.com/azure/app-service/containers/tutorial-dotnetcore-sqldb-app). 
