@@ -7,7 +7,7 @@ author: cephalin
 # MEAN.js sample for Azure App Service
 
 This is a sample application that you can use to follow along with the tutorial at 
-[Build a Node.js and MongoDB web app in Azure](https://docs.microsoft.com/azure/app-service/containers/tutorial-dotnetcore-sqldb-app). 
+[Build a .NET Core and SQL Database web app in Azure Web Apps for Containers](https://docs.microsoft.com/azure/app-service/containers/tutorial-dotnetcore-sqldb-app). 
 
 ## License
 
