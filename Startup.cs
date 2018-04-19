@@ -24,6 +24,9 @@ namespace DotNetCoreSqlDb
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // add ADAL
+            //services.AddAuthentication( sharedOptions => { sharedOptions.DefaultScheme = JwtBearerDefaults.AuthenticationScheme; })
+            //    .AddAzureAdBearer(options => Configuration.Bind("AzureAd", options));
             // Add framework services.
             services.AddMvc();
 
@@ -59,7 +62,9 @@ namespace DotNetCoreSqlDb
 
             app.UseMvc(routes =>
             {
-                routes.MapRoute(
+                routes.MapRoute("DefaultApi", "api/{controller}");
+   
+                   routes.MapRoute(
                     name: "default",
                     template: "{controller=Todos}/{action=Index}/{id?}");
             });

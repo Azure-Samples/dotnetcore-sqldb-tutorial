@@ -1,0 +1,66 @@
+﻿@model DotNetCoreSqlDb.DataModels.Invoice
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Invoice</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.InvoiceDate)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.InvoiceDate)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.BillingAddress)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.BillingAddress)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.BillingCity)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.BillingCity)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.BillingState)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.BillingState)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.BillingCountry)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.BillingCountry)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.BillingPostalCode)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.BillingPostalCode)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Total)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Total)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Customer)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Customer.FirstName)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.InvoiceId">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

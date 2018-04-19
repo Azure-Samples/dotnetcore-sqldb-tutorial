@@ -1,0 +1,77 @@
+﻿@model IEnumerable<DotNetCoreSqlDb.DataModels.Invoice>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.InvoiceDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.BillingAddress)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.BillingCity)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.BillingState)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.BillingCountry)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.BillingPostalCode)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Total)
+                </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Customer)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.InvoiceDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BillingAddress)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BillingCity)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BillingState)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BillingCountry)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BillingPostalCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Total)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Customer.FirstName)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.InvoiceId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.InvoiceId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.InvoiceId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

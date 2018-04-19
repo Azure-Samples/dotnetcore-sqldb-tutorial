@@ -19,6 +19,283 @@ namespace DotNetCoreSqlDb.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.0.2-rtm-10011");
 
+            modelBuilder.Entity("DotNetCoreSqlDb.DataModels.Album", b =>
+                {
+                    b.Property<int>("AlbumId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("ArtistId");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(160);
+
+                    b.HasKey("AlbumId");
+
+                    b.HasIndex("ArtistId");
+
+                    b.ToTable("Album");
+                });
+
+            modelBuilder.Entity("DotNetCoreSqlDb.DataModels.Artist", b =>
+                {
+                    b.Property<int>("ArtistId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(120);
+
+                    b.HasKey("ArtistId");
+
+                    b.ToTable("Artist");
+                });
+
+            modelBuilder.Entity("DotNetCoreSqlDb.DataModels.Customer", b =>
+                {
+                    b.Property<int>("CustomerId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Address")
+                        .HasMaxLength(70);
+
+                    b.Property<string>("City")
+                        .HasMaxLength(40);
+
+                    b.Property<string>("Company")
+                        .HasMaxLength(80);
+
+                    b.Property<string>("Country")
+                        .HasMaxLength(40);
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(60);
+
+                    b.Property<string>("Fax")
+                        .HasMaxLength(24);
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(20);
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(20);
+
+                    b.Property<string>("Phone")
+                        .HasMaxLength(24);
+
+                    b.Property<string>("PostalCode")
+                        .HasMaxLength(10);
+
+                    b.Property<string>("State")
+                        .HasMaxLength(40);
+
+                    b.Property<int>("SupportRepId");
+
+                    b.HasKey("CustomerId");
+
+                    b.HasIndex("SupportRepId");
+
+                    b.ToTable("Customer");
+                });
+
+            modelBuilder.Entity("DotNetCoreSqlDb.DataModels.Employee", b =>
+                {
+                    b.Property<int>("EmployeeId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Address")
+                        .HasMaxLength(70);
+
+                    b.Property<DateTime>("BirthDate");
+
+                    b.Property<string>("City")
+                        .HasMaxLength(40);
+
+                    b.Property<string>("Country")
+                        .HasMaxLength(40);
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(60);
+
+                    b.Property<string>("Fax")
+                        .HasMaxLength(24);
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(20);
+
+                    b.Property<DateTime>("HireDate");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(20);
+
+                    b.Property<string>("Phone")
+                        .HasMaxLength(24);
+
+                    b.Property<string>("PostalCode")
+                        .HasMaxLength(10);
+
+                    b.Property<int>("ReportsTo");
+
+                    b.Property<string>("State")
+                        .HasMaxLength(40);
+
+                    b.Property<string>("Title")
+                        .HasMaxLength(30);
+
+                    b.HasKey("EmployeeId");
+
+                    b.HasIndex("ReportsTo");
+
+                    b.ToTable("Employee");
+                });
+
+            modelBuilder.Entity("DotNetCoreSqlDb.DataModels.Genre", b =>
+                {
+                    b.Property<int>("GenreId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(120);
+
+                    b.HasKey("GenreId");
+
+                    b.ToTable("Genre");
+                });
+
+            modelBuilder.Entity("DotNetCoreSqlDb.DataModels.Invoice", b =>
+                {
+                    b.Property<int>("InvoiceId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("BillingAddress")
+                        .HasMaxLength(70);
+
+                    b.Property<string>("BillingCity")
+                        .HasMaxLength(40);
+
+                    b.Property<string>("BillingCountry")
+                        .HasMaxLength(40);
+
+                    b.Property<string>("BillingPostalCode")
+                        .HasMaxLength(10);
+
+                    b.Property<string>("BillingState")
+                        .HasMaxLength(40);
+
+                    b.Property<int>("CustomerId");
+
+                    b.Property<DateTime>("InvoiceDate");
+
+                    b.Property<decimal>("Total");
+
+                    b.HasKey("InvoiceId");
+
+                    b.HasIndex("CustomerId");
+
+                    b.ToTable("Invoice");
+                });
+
+            modelBuilder.Entity("DotNetCoreSqlDb.DataModels.InvoiceLine", b =>
+                {
+                    b.Property<int>("InvoiceLineId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("CustomerId");
+
+                    b.Property<int>("Quantity");
+
+                    b.Property<int>("TrackId");
+
+                    b.Property<decimal>("UnitPrice");
+
+                    b.HasKey("InvoiceLineId");
+
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("TrackId");
+
+                    b.ToTable("InvoiceLine");
+                });
+
+            modelBuilder.Entity("DotNetCoreSqlDb.DataModels.MediaType", b =>
+                {
+                    b.Property<int>("MediaTypeId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(120);
+
+                    b.HasKey("MediaTypeId");
+
+                    b.ToTable("MediaType");
+                });
+
+            modelBuilder.Entity("DotNetCoreSqlDb.DataModels.Playlist", b =>
+                {
+                    b.Property<int>("PlaylistId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(120);
+
+                    b.HasKey("PlaylistId");
+
+                    b.ToTable("Playlist");
+                });
+
+            modelBuilder.Entity("DotNetCoreSqlDb.DataModels.PlaylistTrack", b =>
+                {
+                    b.Property<int>("PlaylistId");
+
+                    b.Property<int>("TrackId");
+
+                    b.HasKey("PlaylistId", "TrackId");
+
+                    b.HasIndex("TrackId");
+
+                    b.ToTable("PlaylistTrack");
+                });
+
+            modelBuilder.Entity("DotNetCoreSqlDb.DataModels.Track", b =>
+                {
+                    b.Property<int>("TrackId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("AlbumId");
+
+                    b.Property<int>("Bytes");
+
+                    b.Property<string>("Composer")
+                        .HasMaxLength(220);
+
+                    b.Property<int>("GenreId");
+
+                    b.Property<int>("MediaTypeId");
+
+                    b.Property<int>("Miliseconds");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200);
+
+                    b.Property<decimal>("UnitPrice");
+
+                    b.HasKey("TrackId");
+
+                    b.HasIndex("AlbumId");
+
+                    b.HasIndex("GenreId");
+
+                    b.HasIndex("MediaTypeId");
+
+                    b.ToTable("Track");
+                });
+
             modelBuilder.Entity("DotNetCoreSqlDb.Models.Todo", b =>
                 {
                     b.Property<int>("ID")
@@ -33,6 +310,82 @@ namespace DotNetCoreSqlDb.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("Todo");
+                });
+
+            modelBuilder.Entity("DotNetCoreSqlDb.DataModels.Album", b =>
+                {
+                    b.HasOne("DotNetCoreSqlDb.DataModels.Artist", "Artist")
+                        .WithMany()
+                        .HasForeignKey("ArtistId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("DotNetCoreSqlDb.DataModels.Customer", b =>
+                {
+                    b.HasOne("DotNetCoreSqlDb.DataModels.Employee", "SupportRep")
+                        .WithMany()
+                        .HasForeignKey("SupportRepId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("DotNetCoreSqlDb.DataModels.Employee", b =>
+                {
+                    b.HasOne("DotNetCoreSqlDb.DataModels.Employee", "ReportsToManager")
+                        .WithMany()
+                        .HasForeignKey("ReportsTo")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("DotNetCoreSqlDb.DataModels.Invoice", b =>
+                {
+                    b.HasOne("DotNetCoreSqlDb.DataModels.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("DotNetCoreSqlDb.DataModels.InvoiceLine", b =>
+                {
+                    b.HasOne("DotNetCoreSqlDb.DataModels.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("DotNetCoreSqlDb.DataModels.Track", "Track")
+                        .WithMany()
+                        .HasForeignKey("TrackId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("DotNetCoreSqlDb.DataModels.PlaylistTrack", b =>
+                {
+                    b.HasOne("DotNetCoreSqlDb.DataModels.Playlist", "Playlist")
+                        .WithMany()
+                        .HasForeignKey("PlaylistId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("DotNetCoreSqlDb.DataModels.Track", "Track")
+                        .WithMany()
+                        .HasForeignKey("TrackId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("DotNetCoreSqlDb.DataModels.Track", b =>
+                {
+                    b.HasOne("DotNetCoreSqlDb.DataModels.Album", "Album")
+                        .WithMany()
+                        .HasForeignKey("AlbumId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("DotNetCoreSqlDb.DataModels.Genre", "Genre")
+                        .WithMany()
+                        .HasForeignKey("GenreId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("DotNetCoreSqlDb.DataModels.MediaType", "MediaType")
+                        .WithMany()
+                        .HasForeignKey("MediaTypeId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }
