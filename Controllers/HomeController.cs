@@ -15,7 +15,7 @@ namespace DotNetCoreSqlDb.Controllers
 
         public IActionResult About()
         {
-            ViewData["Message"] = "Your application description page.";
+            ViewData["Message"] = "Todo List data-driven .NET Core app in Azure App Service.";
 
             return View();
         }
