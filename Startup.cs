@@ -36,6 +36,7 @@ namespace DotNetCoreSqlDb
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
+            loggerFactory.AddAzureWebAppDiagnostics();
 
             if (env.IsDevelopment())
             {
