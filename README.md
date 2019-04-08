@@ -1,7 +1,10 @@
 ---
-services: app-service\web,app-service
-platforms: dotnet
-author: cephalin
+topic: Node.js Hello World
+languages:
+  - aspx-csharp
+products:
+  - Azure App Service
+  - Azure Web Apps
 ---
 
 # .NET Core MVC sample for Azure App Service
