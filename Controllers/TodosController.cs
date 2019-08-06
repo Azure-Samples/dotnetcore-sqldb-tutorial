@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,7 +15,7 @@ namespace DotNetCoreSqlDb.Controllers
 
         public TodosController(MyDatabaseContext context)
         {
-            _context = context;    
+            _context = context;
         }
 
         // GET: Todos
@@ -33,7 +33,7 @@ namespace DotNetCoreSqlDb.Controllers
             }
 
             var todo = await _context.Todo
-                .SingleOrDefaultAsync(m => m.ID == id);
+                .FirstOrDefaultAsync(m => m.ID == id);
             if (todo == null)
             {
                 return NotFound();
@@ -59,7 +59,7 @@ namespace DotNetCoreSqlDb.Controllers
             {
                 _context.Add(todo);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Index");
+                return RedirectToAction(nameof(Index));
             }
             return View(todo);
         }
@@ -72,7 +72,7 @@ namespace DotNetCoreSqlDb.Controllers
                 return NotFound();
             }
 
-            var todo = await _context.Todo.SingleOrDefaultAsync(m => m.ID == id);
+            var todo = await _context.Todo.FindAsync(id);
             if (todo == null)
             {
                 return NotFound();
@@ -110,7 +110,7 @@ namespace DotNetCoreSqlDb.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction("Index");
+                return RedirectToAction(nameof(Index));
             }
             return View(todo);
         }
@@ -124,7 +124,7 @@ namespace DotNetCoreSqlDb.Controllers
             }
 
             var todo = await _context.Todo
-                .SingleOrDefaultAsync(m => m.ID == id);
+                .FirstOrDefaultAsync(m => m.ID == id);
             if (todo == null)
             {
                 return NotFound();
@@ -138,10 +138,10 @@ namespace DotNetCoreSqlDb.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var todo = await _context.Todo.SingleOrDefaultAsync(m => m.ID == id);
+            var todo = await _context.Todo.FindAsync(id);
             _context.Todo.Remove(todo);
             await _context.SaveChangesAsync();
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index));
         }
 
         private bool TodoExists(int id)

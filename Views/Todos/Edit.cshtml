@@ -1,38 +1,34 @@
-@model DotNetCoreSqlDb.Models.Todo
+﻿@model DotNetCoreSqlDb.Models.Todo
 
 @{
     ViewData["Title"] = "Edit";
 }
 
-<h2>Edit</h2>
+<h1>Edit</h1>
 
-<form asp-action="Edit">
-    <div class="form-horizontal">
-        <h4>Todo</h4>
-        <hr />
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-    <input type="hidden" asp-for="ID" />
-        <div class="form-group">
-            <label asp-for="Description" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
+<h4>Todo</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="ID" />
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
                 <input asp-for="Description" class="form-control" />
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
-        </div>
-        <div class="form-group">
-            <label asp-for="CreatedDate" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
+            <div class="form-group">
+                <label asp-for="CreatedDate" class="control-label"></label>
                 <input asp-for="CreatedDate" class="form-control" />
                 <span asp-validation-for="CreatedDate" class="text-danger"></span>
             </div>
-        </div>
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
             </div>
-        </div>
+        </form>
     </div>
-</form>
+</div>
 
 <div>
     <a asp-action="Index">Back to List</a>

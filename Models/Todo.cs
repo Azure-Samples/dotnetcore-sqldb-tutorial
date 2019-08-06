@@ -17,3 +17,4 @@ namespace DotNetCoreSqlDb.Models
         public DateTime CreatedDate { get; set; }
     }
 }
+
