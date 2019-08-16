@@ -4,7 +4,7 @@ languages:
 - csharp
 - aspx-csharp
 page_type: sample
-description: "This is a sample application that you can use to follow along with the Build a .NET Core and SQL Database web app in Azure Web Apps for Containers tutorial."
+description: "This is a sample application you can use to follow along w/ the Build a .NET Core and SQL Database web app in Azure Web Apps for Containers tutorial."
 products:
 - azure
 - aspnet-core
