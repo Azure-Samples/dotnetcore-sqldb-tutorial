@@ -1,10 +1,14 @@
 ---
 topic: .NET Core MVC sample for Azure App Service
 languages:
-  - aspx-csharp
+- csharp
+- aspx-csharp
+page_type: sample
+description: "This is a sample application that you can use to follow along with the Build a .NET Core and SQL Database web app in Azure Web Apps for Containers tutorial."
 products:
-  - Azure App Service
-  - Azure Web Apps
+- azure
+- aspnet-core
+- azure-app-service
 ---
 
 # .NET Core MVC sample for Azure App Service
