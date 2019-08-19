@@ -1,5 +1,4 @@
 ---
-topic: .NET Core MVC sample for Azure App Service
 languages:
 - csharp
 - aspx-csharp
