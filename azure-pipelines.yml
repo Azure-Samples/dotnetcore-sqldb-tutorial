@@ -12,8 +12,9 @@ jobs:
       vmImage: windows-2019
     steps:
     - task: PowerShell@2
-      filePath: dynatrace-extension.ps1
-      arguments: '-subscription "$(azureSubscription)" -resourceGroup "$(azureResourceGroup)" -appName "$(appName)" -environmentId "$(dynatraceEnvId)" -apiToken "$(dynatracePaasToken)"'
+      inputs:
+        filePath: dynatrace-extension.ps1
+        arguments: '-subscription "$(azureSubscription)" -resourceGroup "$(azureResourceGroup)" -appName "$(appName)" -environmentId "$(dynatraceEnvId)" -apiToken "$(dynatracePaasToken)"'
 
   - job: AppService
     displayName: Deploy to App Service
