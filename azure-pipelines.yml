@@ -5,7 +5,7 @@ variables:
   buildConfiguration: Release
 
 jobs:
-  - job: DyntraceExtension
+  - job: DynatraceExtension
     displayName: Install/Update Dynatrace Extension
     continueOnError: True
     pool:
