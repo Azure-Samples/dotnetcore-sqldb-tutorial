@@ -23,7 +23,7 @@ jobs:
   - job: AppService
     displayName: Deploy to App Service
     pool:
-      vmImage: ubuntu-18.04
+      vmImage: windows-2019
     steps:
     - task: DotNetCoreCLI@2
       displayName: Restore
