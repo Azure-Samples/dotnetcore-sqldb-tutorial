@@ -37,6 +37,7 @@ try {
   $installStatus = ($install.provisioningState).ToString() + "|" + ($install.installed_date_time).ToString()
   Write-Output "Installation Status : $installStatus"
 }
+catch{$_}
 
 # Kill Kudu's process, so that the Site Extension gets loaded next time it starts. This returns a 502, but can be ignored.
 #Invoke-RestMethod -Headers @{Authorization=("Basic {0}" -f $credentials)} -Method 'DELETE' -Uri ("{0}/api/processes/0" -f $scmUrl)
