@@ -6,8 +6,6 @@ pool:
 
 variables:
   buildConfiguration: 'Release'
-  azureServiceConnection: ''
-  appName: ''
 
 steps:
 - task: DotNetCoreCLI@2
