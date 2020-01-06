@@ -1,5 +1,3 @@
-name: 'Deploy MVC App'
-
 trigger:
 - master
 
