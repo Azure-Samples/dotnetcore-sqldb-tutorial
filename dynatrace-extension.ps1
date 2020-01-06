@@ -30,10 +30,16 @@ $scmUrl = "https://{0}" -f $data.publishUrl
 $credentials = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $data.userName,$data.userPWD)))
 
 # Install Site Extension via KUDU Rest API
-Invoke-RestMethod -Headers @{Authorization=("Basic {0}" -f $credentials)} -Uri ("{0}/api/extensionfeed/Dynatrace" -f $scmUrl)
+$invoke = Invoke-RestMethod -Method 'GET' -Headers @{Authorization=("Basic {0}" -f $credentials)} -Uri ("{0}/api/extensionfeed" -f $scmUrl)
+$id = ($invoke | ? {$_.id -match "Dynatrace"}).id
+try {
+  $install = Invoke-RestMethod -Method 'POST' -Headers @{Authorization=("Basic {0}" -f $credentials)} -Uri ("{0}/api/siteextensions/{1}" -f $scmUrli,$id)
+  $installStatus = ($install.provisioningState).ToString() + "|" + ($install.installed_date_time).ToString()
+  Write-Output "Installation Status : $installStatus"
+}
 
 # Kill Kudu's process, so that the Site Extension gets loaded next time it starts. This returns a 502, but can be ignored.
-Invoke-RestMethod -Headers @{Authorization=("Basic {0}" -f $credentials)} -Method 'DELETE' -Uri ("{0}/api/processes/0" -f $scmUrl)
+#Invoke-RestMethod -Headers @{Authorization=("Basic {0}" -f $credentials)} -Method 'DELETE' -Uri ("{0}/api/processes/0" -f $scmUrl)
 
 # Now you can make make queries to the Dynatrace Site Extension API.
 # If it's the first request to the SCM website, the request may fail due to request-timeout.
