@@ -33,7 +33,7 @@ $credentials = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{
 $invoke = Invoke-RestMethod -Method 'GET' -Headers @{Authorization=("Basic {0}" -f $credentials)} -Uri ("{0}/api/extensionfeed" -f $scmUrl)
 $id = ($invoke | ? {$_.id -match "Dynatrace"}).id
 try {
-  $install = Invoke-RestMethod -Method 'POST' -Headers @{Authorization=("Basic {0}" -f $credentials)} -Uri ("{0}/api/siteextensions/{1}" -f $scmUrli,$id)
+  $install = Invoke-RestMethod -Method 'POST' -Headers @{Authorization=("Basic {0}" -f $credentials)} -Uri ("{0}/api/siteextensions/{1}" -f $scmUrl,$id)
   $installStatus = ($install.provisioningState).ToString() + "|" + ($install.installed_date_time).ToString()
   Write-Output "Installation Status : $installStatus"
 }
