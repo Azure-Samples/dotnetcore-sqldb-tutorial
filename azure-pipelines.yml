@@ -1,44 +1,52 @@
 trigger:
 - master
 
-pool:
-  vmImage: 'ubuntu-18.04'
-
 variables:
-  buildConfiguration: 'Release'
+  buildConfiguration: Release
 
-steps:
-- task: DotNetCoreCLI@2
-  displayName: Restore
-  inputs:
-    command: restore
-    projects: '**/*.csproj'
+jobs:
+  - job: DyntraceExtension
+    displayName: Install/Update Dynatrace Extension
+    continueOnError: True
+    pool:
+      vmImage: windows-2019
+    steps:
+    - task: PowerShell@2
+      filePath: dynatrace-extension.ps1
+      arguments: '-subscription "$(azureSubscription)" -resourceGroup "$(azureResourceGroup)" -appName "$(appName)" -environmentId "$(dynatraceEnvId)" -apiToken "$(dynatracePaasToken)"'
 
-- task: DotNetCoreCLI@2
-  displayName: Build
-  inputs:
-    command: build
-    projects: '**/*.csproj'
-    arguments: '--configuration $(buildConfiguration)'
-
-- task: DotNetCoreCLI@2
-  displayName: Package
-  inputs:
-    command: publish
-    publishWebProjects: True
-    arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
-    zipAfterPublish: True
-
-- task: PublishBuildArtifacts@1
-  displayName: Publish
-  inputs:
-    pathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    artifactName: appServiceMVC
-
-- task: AzureWebApp@1
-  displayName: Deploy
-  inputs:
-    azureSubscription: '$(azureServiceConnection)'
-    appType: webAppLinux
-    appName: '$(appName)'
-    package: $(System.ArtifactsDirectory)/**/*.zip
+  - job: AppService
+    displayName: Deploy to App Service
+    pool:
+      vmImage: ubuntu-18.04
+    steps:
+    - task: DotNetCoreCLI@2
+      displayName: Restore
+      inputs:
+        command: restore
+        projects: '**/*.csproj'
+    - task: DotNetCoreCLI@2
+      displayName: Build
+      inputs:
+        command: build
+        projects: '**/*.csproj'
+        arguments: '--configuration $(buildConfiguration)'
+    - task: DotNetCoreCLI@2
+      displayName: Package
+      inputs:
+        command: publish
+        publishWebProjects: True
+        arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+        zipAfterPublish: True
+    - task: PublishBuildArtifacts@1
+      displayName: Publish
+      inputs:
+        pathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        artifactName: appServiceMVC
+    - task: AzureWebApp@1
+      displayName: Deploy
+      inputs:
+        azureSubscription: '$(azureServiceConnection)'
+        appType: webAppLinux
+        appName: '$(appName)'
+        package: '$(System.ArtifactsDirectory)/**/*.zip'
