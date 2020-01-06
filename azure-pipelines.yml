@@ -19,6 +19,7 @@ jobs:
       inputs:
         filePath: dynatrace-extension.ps1
         arguments: '-subscription "$(azureSubscription)" -resourceGroup "$(azureResourceGroup)" -appName "$(appName)" -environmentId "$(dynatraceEnvId)" -apiToken "$(dynatracePaasToken)"'
+        errorActionPreference: continue
 
   - job: AppService
     displayName: Deploy to App Service
