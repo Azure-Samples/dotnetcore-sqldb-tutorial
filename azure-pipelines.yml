@@ -13,6 +13,9 @@ jobs:
     steps:
     - task: PowerShell@2
       inputs:
+        script: 'az login --service-principal -u $(servicePrincipalId) -p $(servicePrincipalKey) --tenant $(servicePrincipalTenant)'
+    - task: PowerShell@2
+      inputs:
         filePath: dynatrace-extension.ps1
         arguments: '-subscription "$(azureSubscription)" -resourceGroup "$(azureResourceGroup)" -appName "$(appName)" -environmentId "$(dynatraceEnvId)" -apiToken "$(dynatracePaasToken)"'
 
