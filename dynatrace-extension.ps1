@@ -26,11 +26,15 @@ param(
 
 # Get SCM credentials
 $data = (az webapp deployment list-publishing-profiles --name $appName --subscription $subscription --resource-group $resourceGroup | ConvertFrom-Json) | Where-Object {$_.publishMethod -eq 'MSDeploy'}
+$appUrl = $data.destinationAppUrl
 $scmUrl = "https://{0}" -f $data.publishUrl
 $credentials = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $data.userName,$data.userPWD)))
 
+# Ensure Web App is running
+Invoke-RestMethod -Method 'GET' -Uri $appUrl
+
 # Install Site Extension via KUDU Rest API
-$invoke = Invoke-RestMethod -Method 'GET' -Headers @{Authorization=("Basic {0}" -f $credentials)} -Uri ("{0}/api/extensionfeed" -f $scmUrl)
+$invoke = Invoke-RestMethod -Method 'GET' -Headers @{Authorization=("Basic {0}" -f $credentials)} -Uri ("{0}/api/extensionfeed" -f $scmUrl) -MaximumRetryCount 5 -RetryIntervalSec 5
 $id = ($invoke | ? {$_.id -match "Dynatrace"}).id
 try {
   $install = Invoke-RestMethod -Method 'POST' -Headers @{Authorization=("Basic {0}" -f $credentials)} -Uri ("{0}/api/siteextensions/{1}" -f $scmUrl,$id)
