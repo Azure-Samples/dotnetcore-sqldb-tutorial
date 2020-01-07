@@ -5,6 +5,21 @@ variables:
   buildConfiguration: Release
 
 jobs:
+  - job: DynatraceExtension
+    displayName: Install/Update Dynatrace Extension
+    dependsOn: AppService
+    pool:
+      vmImage: windows-2019
+    steps:
+    - task: PowerShell@2
+      inputs:
+        targetType: inline
+        script: 'az login --service-principal -u $(servicePrincipalId) -p $(servicePrincipalKey) --tenant $(servicePrincipalTenant)'
+    - task: PowerShell@2
+      inputs:
+        filePath: dynatrace-extension.ps1
+        arguments: '-subscription "$(azureSubscription)" -resourceGroup "$(azureResourceGroup)" -appName "$(appName)" -environmentId "$(dynatraceEnvId)" -apiToken "$(dynatracePaasToken)"'
+
   - job: AppService
     displayName: Deploy to App Service
     pool:
@@ -40,23 +55,3 @@ jobs:
         appType: webAppLinux
         appName: '$(appName)'
         package: '$(System.ArtifactsDirectory)/**/*.zip'
-
-  - job: DynatraceExtension
-    displayName: Install/Update Dynatrace Extension
-    dependsOn: AppService
-    pool:
-      vmImage: windows-2019
-    steps:
-    - task: PowerShell@2
-      inputs:
-        targetType: inline
-        script: 'az login --service-principal -u $(servicePrincipalId) -p $(servicePrincipalKey) --tenant $(servicePrincipalTenant)'
-    - task: PowerShell@2
-      inputs:
-        filePath: dynatrace-extension.ps1
-        arguments: '-subscription "$(azureSubscription)" -resourceGroup "$(azureResourceGroup)" -appName "$(appName)" -environmentId "$(dynatraceEnvId)" -apiToken "$(dynatracePaasToken)"'
-    - task: AzureAppServiceManage@0
-      inputs:
-        azureSubscription: '$(azureServiceConnection)'
-        action: restart
-        webAppName: '$(appName)'
