@@ -7,7 +7,6 @@ variables:
 jobs:
   - job: AppService
     displayName: Deploy to App Service
-    dependsOn: DynatraceExtension
     pool:
       vmImage: windows-2019
     steps:
@@ -44,6 +43,7 @@ jobs:
 
   - job: DynatraceExtension
     displayName: Install/Update Dynatrace Extension
+    dependsOn: AppService
     pool:
       vmImage: windows-2019
     steps:
