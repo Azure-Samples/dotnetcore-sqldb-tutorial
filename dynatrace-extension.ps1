@@ -41,6 +41,15 @@ catch{$_}
 
 # Kill Kudu's process, so that the Site Extension gets loaded next time it starts. This returns a 502, but can be ignored.
 #Invoke-RestMethod -Headers @{Authorization=("Basic {0}" -f $credentials)} -Method 'DELETE' -Uri ("{0}/api/processes/0" -f $scmUrl)
+try {
+  Invoke-RestMethod -Headers @{Authorization=("Basic {0}" -f $credentials)} -Method 'DELETE' -Uri ("{0}/api/processes/0" -f $scmUrl)
+} catch {
+  If ( $error[0].Exception.Response.StatusCode -eq "BadGateway" ) {
+    exit 0
+  } else {
+    Write-Host "Unexpected Status Code: $($error[0].Exception.Response.StatusCode.value__) $($error[0].Exception.Response.StatusCode)" ; exit 1
+  }
+}
 
 # Now you can make make queries to the Dynatrace Site Extension API.
 # If it's the first request to the SCM website, the request may fail due to request-timeout.
@@ -70,6 +79,7 @@ Invoke-RestMethod -Headers @{Authorization=("Basic {0}" -f $credentials)} -Metho
 while ($true) {
     $status = Invoke-RestMethod -Headers @{Authorization=("Basic {0}" -f $credentials)} -Uri ("{0}/dynatrace/api/status" -f $scmUrl)
     if (($status.state -eq "Installed") -or ($status.state -eq "Failed")) {
+        Write-Host "OneAgent Status: $($status.state)"
         break
     }
 
