@@ -34,7 +34,7 @@ $credentials = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{
 Invoke-RestMethod -Method 'GET' -Uri $appUrl
 
 # Install Site Extension via KUDU Rest API
-$invoke = Invoke-RestMethod -Method 'GET' -Headers @{Authorization=("Basic {0}" -f $credentials)} -Uri ("{0}/api/extensionfeed" -f $scmUrl) -MaximumRetryCount 5 -RetryIntervalSec 5
+$invoke = Invoke-RestMethod -Method 'GET' -Headers @{Authorization=("Basic {0}" -f $credentials)} -Uri ("{0}/api/extensionfeed" -f $scmUrl)
 $id = ($invoke | ? {$_.id -match "Dynatrace"}).id
 try {
   $install = Invoke-RestMethod -Method 'POST' -Headers @{Authorization=("Basic {0}" -f $credentials)} -Uri ("{0}/api/siteextensions/{1}" -f $scmUrl,$id)
