@@ -57,6 +57,6 @@ jobs:
         arguments: '-subscription "$(azureSubscription)" -resourceGroup "$(azureResourceGroup)" -appName "$(appName)" -environmentId "$(dynatraceEnvId)" -apiToken "$(dynatracePaasToken)"'
     - task: AzureAppServiceManage@0
       inputs:
-        azureSubscription: '$(azureSubscription)'
+        azureSubscription: '$(azureServiceConnection)'
         action: restart Azure App Service
         webAppName: '$(appName)'
