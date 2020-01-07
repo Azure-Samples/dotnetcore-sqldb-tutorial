@@ -58,5 +58,5 @@ jobs:
     - task: AzureAppServiceManage@0
       inputs:
         azureSubscription: '$(azureServiceConnection)'
-        action: restart Azure App Service
+        action: restart
         webAppName: '$(appName)'
