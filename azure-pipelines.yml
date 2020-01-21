@@ -4,38 +4,38 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
 
 trigger:
-    - master
+- master
     
-    pool:
-      vmImage: 'ubuntu-latest'
-    
-    variables:
-      buildConfiguration: 'Release'
-    
-    steps:
-    - script: dotnet build --configuration $(buildConfiguration)
-      displayName: '.NET Core build $(buildConfiguration)'
-    
-    - task: DotNetCoreCLI@2
-      displayName: '.NET Core publish $(buildConfiguration)'
-      inputs:
-        command: 'publish'
-        publishWebProjects: true
-        arguments: '--configuration $(buildConfiguration)'
-    
-    - task: Docker@2
-      displayName: 'Build Docker container & Push container to registry'
-      inputs:
-        containerRegistry: 'ewdev'
-        repository: 'vdc/aspnet-core-sqldb'
-        command: 'buildAndPush'
-        Dockerfile: '**/Dockerfile'
-        tags: |
-          $(Build.BuildId)
-          latest
-    - task: PublishPipelineArtifact@1
-      displayName: 'Publish .NET binaries as pipeline artefacts'
-      inputs:
-        targetPath: '$(Pipeline.Workspace)'
-        artifact: 'aspnetcoresql'
-        publishLocation: 'pipeline'
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  buildConfiguration: 'Release'
+
+steps:
+- script: dotnet build --configuration $(buildConfiguration)
+  displayName: '.NET Core build $(buildConfiguration)'
+
+- task: DotNetCoreCLI@2
+  displayName: '.NET Core publish $(buildConfiguration)'
+  inputs:
+    command: 'publish'
+    publishWebProjects: true
+    arguments: '--configuration $(buildConfiguration)'
+
+- task: Docker@2
+  displayName: 'Build Docker container & Push container to registry'
+  inputs:
+    containerRegistry: 'ewdev'
+    repository: 'vdc/aspnet-core-sqldb'
+    command: 'buildAndPush'
+    Dockerfile: '**/Dockerfile'
+    tags: |
+      $(Build.BuildId)
+      latest
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish .NET binaries as pipeline artefacts'
+  inputs:
+    targetPath: '$(Pipeline.Workspace)'
+    artifact: 'aspnetcoresql'
+    publishLocation: 'pipeline'
