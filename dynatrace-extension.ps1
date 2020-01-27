@@ -33,7 +33,7 @@ $credentials = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{
 $invoke = Invoke-RestMethod -Method 'GET' -Headers @{Authorization=("Basic {0}" -f $credentials)} -Uri ("{0}/api/extensionfeed" -f $scmUrl)
 $id = ($invoke | ? {$_.id -match "Dynatrace"}).id
 #New-AzureRmResource -ResourceType "Microsoft.Web/sites/siteextensions" -ResourceGroupName $resourceGroup -Name "$appName/$id" -Force -AsJob
-az resource create --resource-type "Microsoft.Web/sites/siteextensions" --resource-group $resourceGroup  --properties '{"name":"$appName/$id"}'
+az resource create --resource-type "Microsoft.Web/sites/siteextensions" --resource-group $resourceGroup --name "$appName/$id" --properties '{}'
 
 $installStatus = ""
 Do {
