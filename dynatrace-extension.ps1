@@ -32,13 +32,24 @@ $credentials = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{
 # Install Site Extension via KUDU Rest API
 $invoke = Invoke-RestMethod -Method 'GET' -Headers @{Authorization=("Basic {0}" -f $credentials)} -Uri ("{0}/api/extensionfeed" -f $scmUrl)
 $id = ($invoke | ? {$_.id -match "Dynatrace"}).id
-try {
-  $install = Invoke-RestMethod -Method 'POST' -Headers @{Authorization=("Basic {0}" -f $credentials)} -Uri ("{0}/api/siteextensions/{1}" -f $scmUrl,$id)
-  $installStatus = ($install.provisioningState).ToString() + "|" + ($install.installed_date_time).ToString()
-  Write-Output "Installation Status : $installStatus"
-  Restart-AzureRmWebApp -ResourceGroupName $resourceGroup -Name $appName -Verbose
+New-AzResource -ResourceType "Microsoft.Web/sites/siteextensions" -ResourceGroupName $resourceGroup -Name "$appName/$id" -Force -AsJob
+
+$installStatus = ""
+Do {
+  $install = Invoke-RestMethod -Method 'GET' -Headers @{Authorization=("Basic {0}" -f $credentials)} -Uri ("{0}/api/siteextensions" -f $scmUrl)
+  $installStatus = ($install | ? {$_.id -match "Dynatrace"}).provisioningState
 }
-catch{$_}
+Until (($installStatus -eq "Succeeded") -or ($installStatus -eq "Failure"))
+
+Write-Output "Installation Status: $installStatus"
+
+#try {
+#  $install = Invoke-RestMethod -Method 'POST' -Headers @{Authorization=("Basic {0}" -f $credentials)} -Uri ("{0}/api/siteextensions/{1}" -f $scmUrl,$id)
+#  $installStatus = ($install.Properties.provisioningState).ToString() + "|" + ($install.Properties.installed_date_time).ToString()
+#  Write-Output "Installation Status : $installStatus"
+#  Restart-AzureRmWebApp -ResourceGroupName $resourceGroup -Name $appName -Verbose
+#}
+#catch{$_}
 
 # Kill Kudu's process, so that the Site Extension gets loaded next time it starts. This returns a 502, but can be ignored.
 #try {
