@@ -46,15 +46,15 @@ Write-Output "Installation Status: $installStatus"
 
 # Now you can make make queries to the Dynatrace Site Extension API.
 # If it's the first request to the SCM website, the request may fail due to request-timeout.
-$up = false
+$up = "false"
 Do {
   try {
     Invoke-RestMethod -Headers @{Authorization=("Basic {0}" -f $credentials)} -Uri ("{0}/dynatrace/api/status" -f $scmUrl)
-    $up = true
+    $up = "true"
   } catch {
-    $up = false
+    $up = "false"
   }
-} Until ($up -eq true)
+} Until ($up -eq "true")
 
 # Install the agent through extensions API
 $settings = @{
