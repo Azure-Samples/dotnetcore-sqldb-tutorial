@@ -32,11 +32,11 @@ $credentials = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{
 # Install Site Extension via KUDU Rest API
 $invoke = Invoke-RestMethod -Method 'GET' -Headers @{Authorization=("Basic {0}" -f $credentials)} -Uri ("{0}/api/extensionfeed" -f $scmUrl)
 $id = ($invoke | ? {$_.id -match "Dynatrace"}).id
-#New-AzureRmResource -ResourceType "Microsoft.Web/sites/siteextensions" -ResourceGroupName $resourceGroup -Name "$appName/$id" -Force -AsJob
-az resource create --resource-type "Microsoft.Web/sites/siteextensions" --resource-group $resourceGroup --name "$appName/$id" --properties '{}'
+az resource create --resource-type "Microsoft.Web/sites/siteextensions" --resource-group $resourceGroup --name "$appName/siteextensions/$id" --properties '{}'
 
 $installStatus = ""
 Do {
+  Start-Sleep 3
   $install = Invoke-RestMethod -Method 'GET' -Headers @{Authorization=("Basic {0}" -f $credentials)} -Uri ("{0}/api/siteextensions" -f $scmUrl)
   $installStatus = ($install | ? {$_.id -match "Dynatrace"}).provisioningState
 }
@@ -44,41 +44,19 @@ Until (($installStatus -eq "Succeeded") -or ($installStatus -eq "Failure"))
 
 Write-Output "Installation Status: $installStatus"
 
-#try {
-#  $install = Invoke-RestMethod -Method 'POST' -Headers @{Authorization=("Basic {0}" -f $credentials)} -Uri ("{0}/api/siteextensions/{1}" -f $scmUrl,$id)
-#  $installStatus = ($install.Properties.provisioningState).ToString() + "|" + ($install.Properties.installed_date_time).ToString()
-#  Write-Output "Installation Status : $installStatus"
-#  Restart-AzureRmWebApp -ResourceGroupName $resourceGroup -Name $appName -Verbose
-#}
-#catch{$_}
-
-# Kill Kudu's process, so that the Site Extension gets loaded next time it starts. This returns a 502, but can be ignored.
-#try {
-#  Invoke-RestMethod -Headers @{Authorization=("Basic {0}" -f $credentials)} -Method 'DELETE' -Uri ("{0}/api/processes/0" -f $scmUrl)
-#} catch {
-#  If ( $error[0].Exception.Response.StatusCode -eq "BadGateway" ) {
-#    exit 0
-#  } else {
-#    Write-Host "Unexpected Status Code: $($error[0].Exception.Response.StatusCode.value__) $($error[0].Exception.Response.StatusCode)" ; exit 1
-#  }
-#}
-
 # Now you can make make queries to the Dynatrace Site Extension API.
 # If it's the first request to the SCM website, the request may fail due to request-timeout.
-$retry = 0
-while ($true) {
+$up = false
+Do {
   try {
     Invoke-RestMethod -Headers @{Authorization=("Basic {0}" -f $credentials)} -Uri ("{0}/dynatrace/api/status" -f $scmUrl)
+    $up = true
   } catch {
-    if (++$retry -ge 3) {
-      break
-    }
+    $up = false
   }
-}
+} Until ($up -eq true)
 
-#----------------------------------------------------------
-# Install the agent through extensions API ----------------
-#----------------------------------------------------------
+# Install the agent through extensions API
 $settings = @{
     "environmentId" = $environmentId
     "apiUrl"        = $apiUrl
@@ -88,14 +66,14 @@ $settings = @{
 Invoke-RestMethod -Headers @{Authorization=("Basic {0}" -f $credentials)} -Method 'PUT' -ContentType "application/json" -Uri ("{0}/dynatrace/api/settings" -f $scmUrl) -Body ($settings | ConvertTo-Json)
 
 # Wait until the agent is installed or the installation fails
-while ($true) {
-    $status = Invoke-RestMethod -Headers @{Authorization=("Basic {0}" -f $credentials)} -Uri ("{0}/dynatrace/api/status" -f $scmUrl)
-    if (($status.state -eq "Installed") -or ($status.state -eq "Failed")) {
-        Write-Host "OneAgent Status: $($status.state)"
-        break
-    }
+$status = ""
+Do {
+  Start-Sleep 3
+  $request = Invoke-RestMethod -Headers @{Authorization=("Basic {0}" -f $credentials)} -Uri ("{0}/dynatrace/api/status" -f $scmUrl)
+  $status = $request.state
+  Write-Output "Current Agent Status: $status"
+} Until (($status -eq "Installed") -or ($status -eq "Failed"))
 
-    Start-Sleep -Seconds 10
-}
+Write-Output "Final Agent Status: $status"
 
 # Restart app-service so changes gets applied
