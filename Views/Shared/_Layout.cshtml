@@ -47,7 +47,9 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2019 - My TodoList App - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2019 - My TodoList App - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>,
+            ASP.NET Environment: @Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"),
+            Operating System: @Environment.OSVersion
         </div>
     </footer>
 

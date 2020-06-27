@@ -9,8 +9,10 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using DotNetCoreSqlDb.Models;
+using System.Collections;
 
 namespace DotNetCoreSqlDb
 {
@@ -26,38 +28,43 @@ namespace DotNetCoreSqlDb
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<CookiePolicyOptions>(options =>
+            services.AddControllersWithViews();
+
+            Console.WriteLine();
+            Console.WriteLine("Environment variables: ");
+
+
+            foreach (DictionaryEntry envVar in Environment.GetEnvironmentVariables())
+                Console.WriteLine(" {0} : {1}", envVar.Key, envVar.Value);
+
+            string aspEnvironment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+            if (String.IsNullOrEmpty(aspEnvironment))
+                throw new InvalidOperationException("Environment variable ASPNETCORE_ENVIRONMENT should be set, aborting");
+
+            switch (aspEnvironment)
             {
-                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
-                options.CheckConsentNeeded = context => true;
-                options.MinimumSameSitePolicy = SameSiteMode.None;
-            });
+                case "Development":
+                case "Offline":
+                    services.AddDbContext<MyDatabaseContext>(options =>
+                            options.UseSqlite("Data Source=localdatabase.db"));
+                    break;
 
-
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-
-            // services.AddDbContext<MyDatabaseContext>(options =>
-            //         options.UseSqlite("Data Source=localdatabase.db"));
-            // Use SQL Database if in Azure, otherwise, use SQLite
-
-
-            if(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Production")
-               services.AddDbContext<MyDatabaseContext>(options =>
-                       options.UseSqlServer(Configuration.GetConnectionString("MyDbConnection")));
-            else
-               services.AddDbContext<MyDatabaseContext>(options =>
-                       options.UseSqlite("Data Source=localdatabase.db"));
+                default:
+                    string connectionString = Configuration.GetConnectionString("MyDbConnection");
+                    if (String.IsNullOrEmpty(connectionString))
+                        throw new InvalidOperationException("Connection string MyDbConnection should be set, aborting");
+                    services.AddDbContext<MyDatabaseContext>(options =>
+                            options.UseSqlServer(connectionString));
+                    break;
+            }
 
             // Automatically perform database migration
-            services.BuildServiceProvider().GetService<MyDatabaseContext>().Database.Migrate();
+            //services.BuildServiceProvider().GetService<MyDatabaseContext>().Database.Migrate();
 
-            // services.AddDbContext<MyDatabaseContext>(options => {
-            //     options.UseSqlServer(Configuration.GetConnectionString("MyDbConnection"));
-            // });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -67,18 +74,21 @@ namespace DotNetCoreSqlDb
             {
                 app.UseExceptionHandler("/Home/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
+                //app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseCookiePolicy();
 
-            app.UseMvc(routes =>
+            app.UseRouting();
+
+            app.UseAuthorization();
+
+            app.UseEndpoints(endpoints =>
             {
-                routes.MapRoute(
+                endpoints.MapControllerRoute(
                     name: "default",
-                    template: "{controller=Todos}/{action=Index}/{id?}");
+                    pattern: "{controller=Todos}/{action=Index}/{id?}");
             });
         }
     }
