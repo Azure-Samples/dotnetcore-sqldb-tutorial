@@ -1,17 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using DotNetCoreSqlDb.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.EntityFrameworkCore;
-using DotNetCoreSqlDb.Models;
 
 namespace DotNetCoreSqlDb
 {
@@ -28,8 +21,14 @@ namespace DotNetCoreSqlDb
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            services.AddDbContext<MyDatabaseContext>(options =>
-                    options.UseSqlite("Data Source=localdatabase.db"));
+
+            // For SQLite (Default)
+            //services.AddDbContext<ToDoDbContext>(options =>
+            //        options.UseSqlite("Data Source=localdatabase.db"));
+
+            // Uncomment this line to work with SQL Server (Please refer appsettings.json)
+            services.AddDbContext<ToDoDbContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("SQLServerDbConnection")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
