@@ -23,12 +23,12 @@ namespace DotNetCoreSqlDb
             services.AddControllersWithViews();
 
             // For SQLite (Default)
-            services.AddDbContext<ToDoDbContext>(options =>
-                    options.UseSqlite("Data Source=localdatabase.db"));
+            //services.AddDbContext<ToDoDbContext>(options =>
+            //        options.UseSqlite("Data Source=localdatabase.db"));
 
             // Uncomment this line to work with SQL Server (Please refer appsettings.json)
-            //services.AddDbContext<ToDoDbContext>(options =>
-            //    options.UseSqlServer(Configuration.GetConnectionString("SQLServerDbConnection")));
+            services.AddDbContext<ToDoDbContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("SQLServerDbConnection")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
