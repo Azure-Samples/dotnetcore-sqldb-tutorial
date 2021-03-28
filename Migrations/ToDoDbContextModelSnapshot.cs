@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DotNetCoreSqlDb.Migrations
 {
     [DbContext(typeof(ToDoDbContext))]
-    partial class ModelSnapshotModelSnapshot : ModelSnapshot
+    partial class ToDoDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
