@@ -1,19 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using DotNetCoreSqlDb.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using DotNetCoreSqlDb.Models;
 
 namespace DotNetCoreSqlDb.Controllers
 {
     public class TodosController : Controller
     {
-        private readonly MyDatabaseContext _context;
+        private readonly ToDoDbContext _context;
 
-        public TodosController(MyDatabaseContext context)
+        public TodosController(ToDoDbContext context)
         {
             _context = context;
         }
