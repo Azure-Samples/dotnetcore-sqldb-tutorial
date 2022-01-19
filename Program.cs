@@ -1,7 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using DotNetCoreSqlDb.Models;
-using Microsoft.Extensions.Logging.AzureAppServices;
+﻿using DotNetCoreSqlDb.Models;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
