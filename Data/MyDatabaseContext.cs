@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿#nullable disable
 using Microsoft.EntityFrameworkCore;
 
 namespace DotNetCoreSqlDb.Models
