@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using DotNetCoreSqlDb.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using DotNetCoreSqlDb.Models;
 
 namespace DotNetCoreSqlDb.Controllers
 {
@@ -49,8 +44,8 @@ namespace DotNetCoreSqlDb.Controllers
         }
 
         // POST: Todos/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ID,Description,CreatedDate,Done")] Todo todo)
@@ -81,8 +76,8 @@ namespace DotNetCoreSqlDb.Controllers
         }
 
         // POST: Todos/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("ID,Description,CreatedDate,Done")] Todo todo)
@@ -139,6 +134,11 @@ namespace DotNetCoreSqlDb.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var todo = await _context.Todo.FindAsync(id);
+            if (todo == null)
+            {
+                return NotFound();
+            }
+
             _context.Todo.Remove(todo);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

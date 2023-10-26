@@ -1,38 +1,38 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using DotNetCoreSqlDb.Models;
+using Microsoft.EntityFrameworkCore;
 
-namespace DotNetCoreSqlDb
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Logging.AddAzureWebAppDiagnostics();
+
+// Add services to the container.
+builder.Services.AddControllersWithViews();
+
+builder.Services.AddDbContext<MyDatabaseContext>(options =>
+                    options.UseSqlite("Data Source=localdatabase.db"));
+
+var app = builder.Build();
+
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
 {
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            CreateHostBuilder(args).Build().Run();
-        }
-
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureLogging(logging =>
-                {
-                    logging.AddAzureWebAppDiagnostics();
-                    logging.AddConsole();
-                })
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-
-                    // Override ASPNETCORE_URLS, as this can be set to http://+:8081 in error when deployed as App Service Linux container and Managed Service Identity enabled
-                    string urlSpec = Environment.GetEnvironmentVariable("APPSETTING_ASPNETCORE_URLS");
-                    if (!String.IsNullOrEmpty(urlSpec))
-                        webBuilder.UseUrls(urlSpec);
-                });
-    }
+    app.UseDeveloperExceptionPage();
 }
+else {
+    app.UseExceptionHandler("/Error");
+    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    app.UseHsts();
+}
+
+// app.UseHttpsRedirection();
+app.UseStaticFiles();
+
+app.UseRouting();
+
+app.UseAuthorization();
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Todos}/{action=Index}/{id?}");
+
+app.Run();

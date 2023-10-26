@@ -28,8 +28,6 @@ namespace DotNetCoreSqlDb.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("Done");
-
                     b.HasKey("ID");
 
                     b.ToTable("Todo");
