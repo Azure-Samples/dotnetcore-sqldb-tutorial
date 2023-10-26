@@ -27,7 +27,7 @@ steps:
   displayName: 'Build Docker container & Push container to registry'
   enabled: true
   inputs:
-    containerRegistry: 'ewdev'
+    containerRegistry: '$(acr)'
     repository: 'vdc/aspnet-core-sqldb'
     command: 'buildAndPush'
     Dockerfile: '**/Dockerfile'
